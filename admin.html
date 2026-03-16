@@ -381,14 +381,14 @@ import {
   query, where, orderBy, onSnapshot, serverTimestamp, increment, limit
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBZUVGIfEPCoI9yJ159DhUKrC2_lPV9Vv0",
-    authDomain: "rendaextra-c0084.firebaseapp.com",
-    projectId: "rendaextra-c0084",
-    storageBucket: "rendaextra-c0084.firebasestorage.app",
-    messagingSenderId: "880584827698",
-    appId: "1:880584827698:web:d9920bfabf1b93ad9aad2b",
-    measurementId: "G-QHLXVRGRDJ"
+    const firebaseConfig = {
+    apiKey: "AIzaSyAtgYDPB6PNfnpWBWxE_nVVfPqSWQFwdzg",
+    authDomain: "crimezone-70292.firebaseapp.com",
+    projectId: "crimezone-70292",
+    storageBucket: "crimezone-70292.firebasestorage.app",
+    messagingSenderId: "50194693813",
+    appId: "1:50194693813:web:b46f271cfa5642c0b008fc",
+    measurementId: "G-4VNNN6MF28"
   };
 
 const app = initializeApp(firebaseConfig);
@@ -645,11 +645,11 @@ async function loadMarketplace() {
 }
 
 onAuthStateChanged(auth, async (user) => {
-  if (!user) { window.location.href='/index.html'; return; }
+  if (!user) { window.location.href='/Crimezone/index.html'; return; }
   const snap = await getDoc(doc(db,'usuarios',user.uid));
   if (!snap.exists() || !snap.data().isAdmin) {
     alert('Acesso negado — apenas administradores');
-    window.location.href='/dashboard.html'; return;
+    window.location.href='/Crimezone/dashboard.html'; return;
   }
   loadOverview();
   loadReceitas();

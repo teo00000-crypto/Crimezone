@@ -614,40 +614,56 @@ footer .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:v
 <!-- FIREBASE SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBZUVGIfEPCoI9yJ159DhUKrC2_lPV9Vv0",
-    authDomain: "rendaextra-c0084.firebaseapp.com",
-    projectId: "rendaextra-c0084",
-    storageBucket: "rendaextra-c0084.firebasestorage.app",
-    messagingSenderId: "880584827698",
-    appId: "1:880584827698:web:d9920bfabf1b93ad9aad2b",
-    measurementId: "G-QHLXVRGRDJ"
+    const firebaseConfig = {
+    apiKey: "AIzaSyAtgYDPB6PNfnpWBWxE_nVVfPqSWQFwdzg",
+    authDomain: "crimezone-70292.firebaseapp.com",
+    projectId: "crimezone-70292",
+    storageBucket: "crimezone-70292.firebasestorage.app",
+    messagingSenderId: "50194693813",
+    appId: "1:50194693813:web:b46f271cfa5642c0b008fc",
+    measurementId: "G-4VNNN6MF28"
   };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
 
   window._auth = auth;
   window._db = db;
   window._provider = provider;
-  window._GoogleAuthProvider = GoogleAuthProvider;
   window._doc = doc;
   window._getDoc = getDoc;
   window._setDoc = setDoc;
   window._serverTimestamp = serverTimestamp;
-  window._signInWithPopup = signInWithPopup;
+
+  // Verificar resultado do redirect
+  getRedirectResult(auth).then(async (result) => {
+    if (result && result.user) {
+      const user = result.user;
+      const userRef = doc(db, 'usuarios', user.uid);
+      const snap = await getDoc(userRef);
+      if (snap.exists() && snap.data().skill) {
+        window.location.href = '/Crimezone/dashboard.html';
+      } else {
+        document.getElementById('skillPicker').classList.add('active');
+        document.getElementById('googleBtn').style.display = 'none';
+        document.getElementById('modalTerms').style.display = 'none';
+        openModal();
+      }
+    }
+  }).catch((e) => console.error('Redirect result erro:', e));
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const userRef = doc(db, 'usuarios', user.uid);
       const snap = await getDoc(userRef);
       if (snap.exists() && snap.data().skill) {
-        window.location.href = '/dashboard.html';
+        window.location.href = '/Crimezone/dashboard.html';
       } else {
         document.getElementById('skillPicker').classList.add('active');
         document.getElementById('googleBtn').style.display = 'none';
@@ -667,7 +683,7 @@ let selectedSkill = null;
 
 async function handleGoogleLogin(){
   try {
-    await window._signInWithPopup(window._auth, window._provider);
+    await signInWithRedirect(window._auth, window._provider);
   } catch(e) {
     console.error('Login erro:', e);
   }
@@ -699,7 +715,7 @@ async function confirmSkill(){
     ultimoLogin: window._serverTimestamp(),
     isAdmin: false
   });
-  window.location.href = '/dashboard.html';
+  window.location.href = '/Crimezone/dashboard.html';
 }
 </script>
 </body>
